@@ -137,7 +137,6 @@ def handler(ctx, data: io.BytesIO = None):
                     "status_code": 401,
                     "message": "Unauthorized",
                     "body": body,
-                    "body_schema_validation": json.dumps(body_schema_validation),
                     "error": str(ex1)
                 }})
 
