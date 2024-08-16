@@ -39,6 +39,21 @@ def auth_idcs(token, url, clientID, secretID):
     response = requests.request("POST", url, headers=headers, data=payload)
     return response
 
+def auth_ad(url, clientID, secretID):
+    url = url + "/oauth2/v2.0/token"
+
+    auth_base64_message = base64_string(clientID, secretID)
+
+    headers = {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Authorization': 'Basic ' + auth_base64_message
+    }
+
+    payload = {"scope": "https://graph.microsoft.com/.default", "grant_type": "client_credentials"}
+
+    response = requests.request("POST", url, headers=headers, data=payload)
+    return response
+
 def conta_items(dictData):
     contagem = 0
     for item in dictData:
@@ -80,6 +95,16 @@ def handler(ctx, data: io.BytesIO = None):
         oic_clientId = "FXXXXXXXXXXXXXXXXXXXXXXXXXXX_APPID"
         oic_clientSecret = "xxxxxxxxxx-xxxxx-xxxxx-xxxx-xxxxxxxxxxxxx"
         auth_base64_message = base64_string(oic_clientId, oic_clientSecret)
+
+        url_ad = "https://login.microsoftonline.com/xxxxxxxx-xxxxx-xxxxxx-xxxxxxxx"
+        ClientId_ad = "xxxxxxxxxxxx-xxxx-xxxx-xxxxxxx-xxxxxxxxx"
+        ClientSecret_ad = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+
+        try:
+            token_ad = auth_ad(url_ad, ClientId_ad, ClientSecret_ad)
+            print(token_ad.json())
+        except(Exception) as ex2:
+            print(ex2)
 
         # JSON Items counter
         jsonData = dict(json.loads(data.getvalue().decode('utf-8')).get("data"))["body"]
